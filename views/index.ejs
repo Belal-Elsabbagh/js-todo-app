@@ -19,12 +19,30 @@
     <table>
         <th>Task</th>
         <% 
-        let list = "";
-        tasks.forEach(function(item){
-            list += `<tr><td> ${item.task} </td><td> <a href="/complete/${item._id}">complete</a></td></tr>`
+        let undonelist = "";
+        undoneTasks.forEach(function(item){
+            undonelist += `<tr><td> ${item.task} </td>
+                <td> <a href="/complete/${item._id}">complete</a></td>
+                <td> <a href="/delete/${item._id}">delete</a></td>
+                </tr>`
         });
         %>
-        <%- list %>
+        <%- undonelist %>
+    </table>
+    <h2>Completed Tasks</h2>
+    <table>
+        <th>Task</th>
+        <% 
+        let donelist = "";
+        doneTasks.forEach(function(item){
+            donelist += `<tr>
+                <td> ${item.task} </td>
+                <td> <a href="/reset/${item._id}">reset</a></td>
+                <td> <a href="/delete/${item._id}">delete</a></td>
+                </tr>`
+        });
+        %>
+        <%- donelist %>
     </table>
 </body>
 </html>

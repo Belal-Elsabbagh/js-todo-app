@@ -1,5 +1,4 @@
 let mongoose = require("mongoose");
-
 /**
  * URI that connects to the database
 */

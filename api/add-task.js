@@ -1,10 +1,6 @@
-let database = require('../config/database.js')
-
+let taskListModel = require('../models/models').taskListModel
 
 module.exports.addTask = function(task) {
-    database.databaseConnection.collection('tasks').insertOne({task: task, isCompleted: false}, function (err, collection) {
-        if (err) throw err;
-        console.log("Record inserted Successfully.");
-        return
-    });
+    taskListModel.create({task: task})
+    console.log("Record inserted Successfully.");
 }
