@@ -46,7 +46,7 @@ module.exports = function (app) {
         try {
             if (!('task' in taskToBeReset)) throw new Error("Wrong object format")
             models.taskModel.updateOne(taskToBeReset, 
-                { isCompleted: false, timeCompleted: Date.now() }, 
+                { isCompleted: false, timeCompleted: null }, 
                 function (err, docs) {
                 if (err) throw (err)
                 res.json(docs)
