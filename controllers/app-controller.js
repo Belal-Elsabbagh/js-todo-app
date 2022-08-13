@@ -37,12 +37,14 @@ module.exports = function (app) {
                 })
         }
         catch (err) {
+            console.log(err)
             res.send(err)
         }
     });
 
     app.post('/todo/reset', urlencodedParser, function (req, res) {
         let taskToBeReset = req.body
+        console.log(taskToBeReset)
         try {
             if (!('task' in taskToBeReset)) throw new Error("Wrong object format")
             models.taskModel.updateOne(taskToBeReset, 

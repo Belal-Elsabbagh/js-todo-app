@@ -20,10 +20,11 @@ $(function () {
     });
 
     $('li.tasks-done').on('click', function () {
+        let taskObject = {task: $(this).clone().children().remove().end().text()};
         $.ajax({
             type: 'POST',
             url: '/todo/reset',
-            data: { task: $(this).text() },
+            data: taskObject,
             success: function (data) { location.reload(); }
         });
     });
