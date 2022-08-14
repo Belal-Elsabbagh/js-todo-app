@@ -5,16 +5,20 @@ class Todo {
         return await taskModel.create(todoObject)
     }
 
-    completeTodo = async (todoObject) => {
-        return await taskModel.updateOne(todoObject, { isCompleted: true, timeCompleted: Date.now() })
+    completeTodo = async (todoId) => {
+        return await taskModel.findByIdAndUpdate(todoId, { isCompleted: true, timeCompleted: Date.now() })
     }
 
-    deleteTodo = async (todoObject) => {
-        return await taskModel.deleteOne(todoObject)
+    deleteTodo = async (todoId) => {
+        return await taskModel.findByIdAndDelete(todoId)
     }
 
-    resetTodo = async (todoObject) => {
-        return await taskModel.updateOne(todoObject, { isCompleted: false, timeCompleted: null })
+    updateTodo = async (todoId, updates) => {
+        return await taskModel.findByIdAndUpdate(todoId, updates, { new: true })
+    }
+
+    resetTodo = async (todoId) => {
+        return await taskModel.findByIdAndUpdate(todoId, { isCompleted: false, timeCompleted: null })
     }
 
     getTodos = async () => {

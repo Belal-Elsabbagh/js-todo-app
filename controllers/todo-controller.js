@@ -1,6 +1,6 @@
 const validate = require('../validation/validate')
 const todoSchema = require('../validation/schemas/todo')
-const { addTodo, completeTodo, deleteTodo, resetTodo, getDoneTodos, getUndoneTodos } = require('../services/todo')
+const { addTodo, updateTodo, deleteTodo, getDoneTodos, getUndoneTodos } = require('../services/todo');
 
 module.exports = (app) => {
 
@@ -9,11 +9,11 @@ module.exports = (app) => {
     });
 
     app.get('/todo/undone', async (req, res) => {
-        res.json( await getUndoneTodos())
+        res.json(await getUndoneTodos())
     });
 
     app.get('/todo/done', async (req, res) => {
-        res.json( await getDoneTodos())
+        res.json(await getDoneTodos())
     });
 
     app.post('/todo', async (req, res) => {
@@ -26,28 +26,19 @@ module.exports = (app) => {
         }
     });
 
-    app.post('/todo/complete', async (req, res) => {
+    app.patch('/todo/:id', async (req, res) => {
+        const updates = req.body
+        const id = req.params.id
         try {
-            res.json(await completeTodo(await validate(todoSchema, req.body)))
+            res.json(await updateTodo(id, updates))
+        } catch (err) {
+            res.json(err)
         }
-        catch (err) {
-            console.log(err)
-            res.send(err)
-        }
-    });
+    })
 
-    app.post('/todo/reset', async (req, res) => {
+    app.delete('/todo/:id', async (req, res) => {
         try {
-            res.json(await resetTodo(await validate(todoSchema, req.body)))
-        }
-        catch (err) {
-            res.send(err)
-        }
-    });
-
-    app.delete('/todo/:task', async (req, res) => {
-        try {
-            res.json(await deleteTodo(await validate(todoSchema, { task: req.params.task.replace(/_/g, " ") })))
+            res.json(await deleteTodo(req.params.id))
         }
         catch (err) {
             res.send(err)
