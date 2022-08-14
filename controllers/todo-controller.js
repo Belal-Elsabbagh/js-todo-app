@@ -1,30 +1,34 @@
 const validate = require('../validation/validate')
 const todoSchema = require('../validation/schemas/todo')
-const {addTodo, completeTodo, deleteTodo, getTodos, resetTodo} = require('../services/todo')
+const { addTodo, completeTodo, deleteTodo, resetTodo, getDoneTodos, getUndoneTodos } = require('../services/todo')
 
-module.exports = function (app) {
+module.exports = (app) => {
+
     app.get('/todo', async (req, res) => {
-        let todos = await getTodos();
-        res.render('index', {
-            undoneTasks: todos.filter((i) => { return i.isCompleted == false }),
-            doneTasks: todos.filter((i) => { return i.isCompleted == true })
-        })
+        res.render('index', { undoneTasks: await getUndoneTodos(), doneTasks: await getDoneTodos() })
+    });
+
+    app.get('/todo/undone', async (req, res) => {
+        res.json( await getUndoneTodos())
+    });
+
+    app.get('/todo/done', async (req, res) => {
+        res.json( await getDoneTodos())
     });
 
     app.post('/todo', async (req, res) => {
         try {
-            let taskToBeAdded = await validate(todoSchema, req.body)
-            res.send(await addTodo(taskToBeAdded))
+            let todo = await validate(todoSchema, req.body)
+            res.json(await addTodo(todo))
         }
         catch (err) {
             res.json(err)
         }
     });
 
-    app.post('/todo/complete',async (req, res) => {
+    app.post('/todo/complete', async (req, res) => {
         try {
-            let taskToBeCompleted = await validate(todoSchema, req.body)
-            res.send(await completeTodo(taskToBeCompleted))
+            res.json(await completeTodo(await validate(todoSchema, req.body)))
         }
         catch (err) {
             console.log(err)
@@ -34,8 +38,7 @@ module.exports = function (app) {
 
     app.post('/todo/reset', async (req, res) => {
         try {
-            let taskToBeReset = await validate(todoSchema, req.body)
-            res.send(await resetTodo(taskToBeReset))
+            res.json(await resetTodo(await validate(todoSchema, req.body)))
         }
         catch (err) {
             res.send(err)
@@ -44,8 +47,7 @@ module.exports = function (app) {
 
     app.delete('/todo/:task', async (req, res) => {
         try {
-            let taskToBeDeleted = await validate(todoSchema, {task: req.params.task.replace(/_/g," ")})
-            res.send(await deleteTodo(taskToBeDeleted))
+            res.json(await deleteTodo(await validate(todoSchema, { task: req.params.task.replace(/_/g, " ") })))
         }
         catch (err) {
             res.send(err)

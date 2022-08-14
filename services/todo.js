@@ -13,12 +13,20 @@ class Todo {
         return await taskModel.deleteOne(todoObject)
     }
 
+    resetTodo = async (todoObject) => {
+        return await taskModel.updateOne(todoObject, { isCompleted: false, timeCompleted: null })
+    }
+
     getTodos = async () => {
         return await taskModel.find({})
     }
+    
+    getDoneTodos = async () => {
+        return await taskModel.find({isCompleted: true})
+    }
 
-    resetTodo = async (todoObject) => {
-        return await taskModel.updateOne(todoObject, { isCompleted: false, timeCompleted: null })
+    getUndoneTodos = async () => {
+        return await taskModel.find({isCompleted: false})
     }
 }
 
