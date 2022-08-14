@@ -1,8 +1,8 @@
 let mongoose = require("mongoose");
-/**
- * URI that connects to the database
-*/
-const DATABASE_CONNECTION_URI = 'mongodb://localhost:27017/todo-list'
-mongoose.connect(DATABASE_CONNECTION_URI);
-console.log("Database Connection Successful")
-module.exports.databaseConnection = mongoose.connection
+const dbConfig = require('./configVariables').db
+mongoose.connect(dbConfig.uri).then(() => {
+    module.exports.databaseConnection = mongoose.connection
+    console.log('Database connection successful!');
+}).catch(err => {
+    throw err 
+});
