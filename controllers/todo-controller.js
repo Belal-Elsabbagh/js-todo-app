@@ -1,4 +1,5 @@
-const validateTodo = require('../validation/validateTodo')
+const validate = require('../validation/validate')
+const todoSchema = require('../validation/schemas/todo')
 const {addTodo, completeTodo, deleteTodo, getTodos, resetTodo} = require('../services/todo')
 
 module.exports = function (app) {
@@ -12,7 +13,7 @@ module.exports = function (app) {
 
     app.post('/todo', async (req, res) => {
         try {
-            let taskToBeAdded = await validateTodo(req.body)
+            let taskToBeAdded = await validate(todoSchema, req.body)
             res.send(await addTodo(taskToBeAdded))
         }
         catch (err) {
@@ -22,7 +23,7 @@ module.exports = function (app) {
 
     app.post('/todo/complete',async (req, res) => {
         try {
-            let taskToBeCompleted = await validateTodo(req.body)
+            let taskToBeCompleted = await validate(todoSchema, req.body)
             res.send(await completeTodo(taskToBeCompleted))
         }
         catch (err) {
@@ -33,7 +34,7 @@ module.exports = function (app) {
 
     app.post('/todo/reset', async (req, res) => {
         try {
-            let taskToBeReset = await validateTodo(req.body)
+            let taskToBeReset = await validate(todoSchema, req.body)
             res.send(await resetTodo(taskToBeReset))
         }
         catch (err) {
@@ -43,7 +44,7 @@ module.exports = function (app) {
 
     app.delete('/todo/:task', async (req, res) => {
         try {
-            let taskToBeDeleted = await validateTodo({task: req.params.task.replace(/_/g," ")})
+            let taskToBeDeleted = await validate(todoSchema, {task: req.params.task.replace(/_/g," ")})
             res.send(await deleteTodo(taskToBeDeleted))
         }
         catch (err) {
