@@ -1,4 +1,4 @@
-let taskModel = require('../models/models').taskModel
+const {taskModel} = require('../models/models')
 
 class Todo {
     addTodo = async (todoObject) => {
@@ -19,7 +19,7 @@ class Todo {
 
     resetTodo = async (todoId) => {
         return await taskModel.findByIdAndUpdate(todoId, { isCompleted: false, timeCompleted: null })
-    }
+    } 
 
     getTodos = async () => {
         return await taskModel.find({})
