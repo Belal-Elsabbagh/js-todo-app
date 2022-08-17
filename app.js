@@ -17,7 +17,10 @@ try {
             next(err);
             return;
         }
-        res.status(err.code).json(err);
+        res.status(err.code).json({
+            message: err.message,
+            code: err.code
+        });
     })
     app.listen(configVariables.server.portNumber)
 } catch (err) {

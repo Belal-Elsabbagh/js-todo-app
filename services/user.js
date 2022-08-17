@@ -1,4 +1,4 @@
-const {userModel} = require('../models/models')
+const { userModel } = require('../models/models')
 
 class User {
     /**
@@ -9,7 +9,7 @@ class User {
     addUser = async (userObject) => {
         return await userModel.create(userObject)
     }
-    
+
     /**
      * 
      * @param {Object} userObject The user object to add to the database
@@ -22,10 +22,13 @@ class User {
     /**
      * 
      * @param {string} email The user's email to search for
+     * @throws {NotFoundError} If the user is not found
      * @returns 
      */
     getUserByEmail = async (email) => {
-        return await userModel.findOne({email: email})
+        let queryResult = await userModel.findOne({ email: email })
+        if (queryResult === null) throw new NotFoundError(`User with email ${email} was not found`);
+        return queryResult;
     }
 
     getUsers = async () => {

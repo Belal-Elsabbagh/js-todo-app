@@ -5,11 +5,13 @@ const HTTP_ERRORS = {
     Unauthorized: 401,
     Forbidden: 403,
     NotFoundError: 404,
+    ConflictError: 409,
     UnprocessableEntity: 422,
     InternalServerError: 500,
     BadGateway: 502,
     ServiceUnavailable: 503,
 }
+Object.freeze(HTTP_ERRORS)
 
 class BaseError extends Error {
     code = HTTP_ERRORS.Default;
@@ -51,3 +53,8 @@ module,exports.UnauthorizedError = class UnauthorizedError extends BaseError {
     }
 }
 
+module.exports.InvalidDuplicateError = class InvalidDuplicateError extends BaseError {
+    constructor(message) {
+        super(message, HTTP_ERRORS.ConflictError);
+    }
+}

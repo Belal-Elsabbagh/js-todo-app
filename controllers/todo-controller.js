@@ -1,11 +1,20 @@
-const {validate} = require('../validation/validate')
+const validate = require('../validation/validate')
 const todoSchema = require('../validation/schemas/todo')
-const { addTodo, updateTodo, deleteTodo, getDoneTodos, getUndoneTodos } = require('../services/todo');
+const { addTodo, updateTodo, getTodoById, deleteTodo, getDoneTodos, getUndoneTodos } = require('../services/todo');
 
 module.exports = (app) => {
 
     app.get('/todo', async (req, res) => {
         res.status(200).render('index', { undoneTasks: await getUndoneTodos(), doneTasks: await getDoneTodos() })
+    });
+
+    app.get('/todo/:id', async (req, res, next) => {
+        try {
+            let todo = await getTodoById(req.params.id);
+            res.status(200).json(todo)
+        } catch(err){
+            next(err)
+        }
     });
 
     app.get('/todo/undone', async (req, res, next) => {
