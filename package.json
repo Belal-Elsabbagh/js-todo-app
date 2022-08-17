@@ -4,7 +4,7 @@
   "description": "A practice todo app.",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node tests/todo-tests.js",
     "start": "node app.js"
   },
   "keywords": [],
@@ -14,7 +14,9 @@
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
     "@types/styled-components": "^5.1.26",
+    "axios": "^0.27.2",
     "body-parser": "^1.20.0",
+    "chakram": "^1.5.0",
     "ejs": "^3.1.8",
     "express": "^4.18.1",
     "joi": "^17.6.0",

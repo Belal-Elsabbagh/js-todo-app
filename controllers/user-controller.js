@@ -25,7 +25,7 @@ module.exports = (app) => {
     app.post('/signup', async (req, res, next) => {
         try {
             let user = await validate(signupSchema, req.body);
-            res.status(200).json(await addUser(user));
+            res.status(201).json(await addUser(user));
         }
         catch (err) {
             next(err)

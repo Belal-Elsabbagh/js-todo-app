@@ -1,7 +1,7 @@
 const express = require('express');
 const todoController = require('./controllers/todo-controller')
 const userController = require('./controllers/user-controller')
-const BaseError = require('./middleware/errors').BaseError
+const errorHandler = require('./middleware/errors').errorHandler
 const bodyParser = require('body-parser')
 const configVariables = require('./config/configVariables');
 try {
@@ -11,16 +11,7 @@ try {
     let database = require('./config/database')
     todoController(app)
     userController(app)
-    app.use((err, req, res, next) => {
-        if (!(err instanceof BaseError)) {
-            next(err);
-            return;
-        }
-        res.status(err.code).json({
-            message: err.message,
-            code: err.code
-        });
-    })
+    app.use(errorHandler)
     app.listen(configVariables.server.portNumber)
 } catch (err) {
     console.log(err);

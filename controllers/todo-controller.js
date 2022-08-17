@@ -1,6 +1,15 @@
 const validate = require('../validation/validate')
 const todoSchema = require('../validation/schemas/todo')
-const { addTodo, updateTodo, getTodoById, deleteTodo, getTodos: getAllTodos, getDoneTodos, getUndoneTodos } = require('../services/todo');
+const { 
+    addTodo, 
+    completeTodo, 
+    resetTodo, 
+    updateTodo, 
+    getTodoById, 
+    deleteTodo, 
+    getAllTodos, 
+    getDoneTodos, 
+    getUndoneTodos } = require('../services/todo');
 
 module.exports = (app) => {
 
@@ -36,7 +45,7 @@ module.exports = (app) => {
     app.post('/todo', async (req, res, next) => {
         try {
             let todo = await validate(todoSchema, req.body)
-            res.status(200).json(await addTodo(todo))
+            res.status(201).json(await addTodo(todo))
         }
         catch (err) {
             next(err)
@@ -48,6 +57,24 @@ module.exports = (app) => {
         const id = req.params.id
         try {
             res.status(200).json(await updateTodo(id, updates))
+        } catch (err) {
+            next(err)
+        }
+    })
+
+    app.patch('/todo/complete/:id', async (req, res, next) => {
+        const id = req.params.id
+        try {
+            res.status(200).json(await completeTodo(id))
+        } catch (err) {
+            next(err)
+        }
+    })
+
+    app.patch('/todo/reset/:id', async (req, res, next) => {
+        const id = req.params.id
+        try {
+            res.status(200).json(await resetTodo(id))
         } catch (err) {
             next(err)
         }
