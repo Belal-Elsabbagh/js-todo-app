@@ -1,7 +1,6 @@
 const validate = require('../validation/validate')
 const {signupSchema, loginSchema} = require('../validation/schemas/user')
-const {addUser, getUsers, getUserByEmail, getUser} = require('../services/user')
-const {IncorrectCredentialsError} = require('../middleware/errors')
+const {addUser, getUsers, getUserByEmail, login} = require('../services/user')
 module.exports = (app) => {
     app.get('/user', async (req, res, next) => {
         try {
@@ -35,9 +34,7 @@ module.exports = (app) => {
     app.post('/login', async (req, res, next) => {
         try {
             let user = await validate(loginSchema, req.body);
-            let result = await getUser(user);
-            if (!result) throw new IncorrectCredentialsError('Incorrect Credentials to login');
-            res.status(200).json(result);
+            res.status(200).json(await login(user));
         }
         catch (err) {
             next(err)

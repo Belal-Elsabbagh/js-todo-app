@@ -25,8 +25,10 @@ class BaseError extends Error {
 module,exports.BaseError = BaseError
 
 module,exports.ValidationError = class ValidationError extends BaseError {
-    constructor(message) {
+    details = null
+    constructor(message, details) {
         super(message, HTTP_STATUS_CODES.UnprocessableEntity);
+        this.details = details
     }
 }
 
@@ -65,13 +67,9 @@ module.exports.errorHandler = (err, req, res, next) => {
         next(err);
         return;
     }
-    if (err.statusCode === HTTP_STATUS_CODES.Forbidden) {
-        res.status(err.statusCode).json({
-            message: err.message
-        });
-    }
     res.status(err.code).json({
-        message: err.message,
-        code: err.code
+        errorCode: err.code,
+        errorMessage: err.message,
+        details: err.details
     });
 }

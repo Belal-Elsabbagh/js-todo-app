@@ -1,5 +1,6 @@
 const { userModel } = require('../models/models')
-
+const crypto = require('crypto')
+const { NotFoundError, IncorrectCredentialsError, InvalidDuplicateError } = require('../middleware/errors')
 class User {
     /**
      * 
@@ -7,7 +8,17 @@ class User {
      * @returns {Object} The data of the user that was created
      */
     addUser = async (userObject) => {
-        return await userModel.create(userObject)
+        try {
+            if(await this.userEmailExists(userObject.email)) throw new InvalidDuplicateError('Email already exists')
+            userObject.password = this.#hashPassword(userObject.password)
+            return await userModel.create(userObject)
+        } catch (err) {
+            throw err
+        }
+    }
+
+    #hashPassword(password){
+        return crypto.createHash('sha256').update(password).digest('hex')
     }
 
     /**
@@ -31,8 +42,21 @@ class User {
         return queryResult;
     }
 
+    userEmailExists = async (email) => {
+        let queryResult = await userModel.findOne({ email: email })
+        if (queryResult === null) return false;
+        return true
+    }
+
     getUsers = async () => {
         return await userModel.find({})
+    }
+
+    login = async (user) => {
+        user.password = this.#hashPassword(user.password)
+        let result = await this.getUser(user);
+        if (!result) throw new IncorrectCredentialsError('Incorrect Credentials to login');
+        return result;
     }
 }
 
