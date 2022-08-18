@@ -1,4 +1,4 @@
-module.exports ={
+module.exports = {
     userModel: require('./userModel'),
     todoModel: require('./todoModel')
 }

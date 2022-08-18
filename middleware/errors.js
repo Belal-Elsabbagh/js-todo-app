@@ -20,56 +20,76 @@ class BaseError extends Error {
         super(message);
         this.code = errCode;
     }
+
+    toJSON() {
+        return {
+            errorCode: this.code,
+            errorMessage: this.message,
+        };
+    }
 }
 
-module,exports.BaseError = BaseError
-
-module,exports.ValidationError = class ValidationError extends BaseError {
+class ValidationError extends BaseError {
     details = null
     constructor(message, details) {
         super(message, HTTP_STATUS_CODES.UnprocessableEntity);
         this.details = details
     }
+
+    toJSON() {
+        return {
+            errorCode: this.code,
+            errorMessage: this.message,
+            errorDetails: this.details,
+        }
+    }
 }
 
-module,exports.NotFoundError = class NotFoundError extends BaseError {
+class NotFoundError extends BaseError {
     constructor(message) {
         super(message, HTTP_STATUS_CODES.NotFoundError);
     }
 }
 
-module,exports.IncorrectCredentialsError = class IncorrectCredentialsError extends BaseError {
+class IncorrectCredentialsError extends BaseError {
     constructor(message) {
         super(message, HTTP_STATUS_CODES.Unauthorized);
     }
 }
 
-module,exports.ForbiddenError = class ForbiddenError extends BaseError {
+class ForbiddenError extends BaseError {
     constructor(message) {
         super(message, HTTP_STATUS_CODES.Forbidden);
     }
 }
 
-module,exports.UnauthorizedError = class UnauthorizedError extends BaseError {
+class UnauthorizedError extends BaseError {
     constructor(message) {
         super(message, HTTP_STATUS_CODES.Unauthorized);
     }
 }
-
-module.exports.InvalidDuplicateError = class InvalidDuplicateError extends BaseError {
+class InvalidDuplicateError extends BaseError {
     constructor(message) {
         super(message, HTTP_STATUS_CODES.ConflictError);
     }
 }
 
-module.exports.errorHandler = (err, req, res, next) => {
+errorHandler = (err, req, res, next) => {
     if (!(err instanceof BaseError)) {
         next(err);
         return;
     }
-    res.status(err.code).json({
-        errorCode: err.code,
-        errorMessage: err.message,
-        details: err.details
-    });
+    res.status(err.code).json(err);
+}
+
+module.exports = {
+    HTTP_STATUS_CODES: HTTP_STATUS_CODES,
+    BaseError: BaseError,
+    ValidationError: ValidationError,
+    NotFoundError: NotFoundError,
+    IncorrectCredentialsError: IncorrectCredentialsError,
+    ForbiddenError: ForbiddenError,
+    UnauthorizedError: UnauthorizedError,
+    InvalidDuplicateError: InvalidDuplicateError,
+    errorHandler: errorHandler,
 }

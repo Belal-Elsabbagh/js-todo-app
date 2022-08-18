@@ -1,6 +1,6 @@
 const validate = require('../validation/validate')
-const {signupSchema, loginSchema} = require('../validation/schemas/user')
-const {addUser, getUsers, getUserByEmail, login} = require('../services/user')
+const {signupSchema, loginSchema} = require('../validation/schemas/')
+const {addUser, getUsers, getUserByEmail, login} = require('../services/').userServices
 module.exports = (app) => {
     app.get('/user', async (req, res, next) => {
         try {

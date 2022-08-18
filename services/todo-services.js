@@ -1,4 +1,4 @@
-const { todoModel } = require('../models/models')
+const { todoModel } = require('../models')
 const { NotFoundError } = require('../middleware/errors')
 class Todo {
     addTodo = async (todoObject) => {

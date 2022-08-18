@@ -1,7 +1,6 @@
 const express = require('express');
-const todoController = require('./controllers/todo-controller')
-const userController = require('./controllers/user-controller')
-const errorHandler = require('./middleware/errors').errorHandler
+const { todoController, userController } = require('./controllers');
+const { errorHandler } = require('./middleware/errors')
 const bodyParser = require('body-parser')
 const configVariables = require('./config/configVariables');
 try {

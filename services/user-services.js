@@ -1,5 +1,5 @@
-const { userModel } = require('../models/models')
 const crypto = require('crypto')
+const { userModel } = require('../models')
 const { NotFoundError, IncorrectCredentialsError, InvalidDuplicateError } = require('../middleware/errors')
 class User {
     /**

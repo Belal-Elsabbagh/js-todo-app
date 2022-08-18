@@ -1,4 +1,4 @@
-const ValidationError = require('../middleware/errors').ValidationError
+const {ValidationError} = require('../middleware/errors')
 
 /**
  * 

@@ -1,5 +1,5 @@
 const validate = require('../validation/validate')
-const todoSchema = require('../validation/schemas/todo')
+const {todoSchema} = require('../validation/schemas')
 const { 
     addTodo, 
     completeTodo, 
@@ -9,7 +9,7 @@ const {
     deleteTodo, 
     getAllTodos, 
     getDoneTodos, 
-    getUndoneTodos } = require('../services/todo');
+    getUndoneTodos } = require('../services/').todoServices;
 
 module.exports = (app) => {
 
