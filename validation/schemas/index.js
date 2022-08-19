@@ -1,4 +1,5 @@
 module.exports = {
-    userSchema: require('./user'),
+    signupSchema: require('./user').signupSchema,
+    loginSchema: require('./user').loginSchema,
     todoSchema: require('./todo')
 }

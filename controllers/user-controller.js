@@ -1,6 +1,7 @@
 const validate = require('../validation/validate')
-const {signupSchema, loginSchema} = require('../validation/schemas/')
-const {addUser, getUsers, getUserByEmail, login} = require('../services/').userServices
+const { signupSchema, loginSchema } = require('../validation/schemas/')
+const { addUser, getUsers, getUserByEmail, login, generateToken } = require('../services/').userServices
+
 module.exports = (app) => {
     app.get('/user', async (req, res, next) => {
         try {
@@ -21,7 +22,7 @@ module.exports = (app) => {
         }
     });
 
-    app.post('/signup', async (req, res, next) => {
+    app.post('/user/signup', async (req, res, next) => {
         try {
             let user = await validate(signupSchema, req.body);
             res.status(201).json(await addUser(user));
@@ -31,12 +32,22 @@ module.exports = (app) => {
         }
     });
 
-    app.post('/login', async (req, res, next) => {
+    app.post('/user/login', async (req, res, next) => {
         try {
             let user = await validate(loginSchema, req.body);
-            res.status(200).json(await login(user));
+            let userToken = await login(user)
+            res.status(200).json(userToken);
         }
         catch (err) {
+            next(err)
+        }
+    })
+
+    app.post('/user/generateToken/:userId', async (req, res, next) => {
+        try {
+            const userId = req.params.userId
+            res.status(200).send(await generateToken(userId))
+        } catch(err) {
             next(err)
         }
     })

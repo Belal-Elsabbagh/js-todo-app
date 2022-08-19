@@ -9,5 +9,8 @@ module.exports = {
         uri: 'mongodb://localhost:27017/todo-list',
         username: '',
         password: ''
+    },
+    jwtConfig: {
+        secretKey: '3.1415926535'
     }
 }
