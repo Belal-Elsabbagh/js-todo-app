@@ -36,6 +36,19 @@ describe("App Tests", () => {
       expect(res.body.task).to.equal(testTodo.task)
     })
 
+    it('update todo task', async () =>{
+      const updatedTask = "updated task"
+      const res = await chai
+      .request(app)
+      .patch(`/todo/${testTodo._id.toString()}`)
+      .set('content-type', postContentType)
+      .send({
+        task: updatedTask
+      });
+      expect(res.status).to.equal(200)
+      expect(res.body.task).to.equal(updatedTask)
+    })
+
     it('complete todo', async () => {
       const res = await chai
         .request(app)
@@ -63,10 +76,18 @@ describe("App Tests", () => {
     })
 
     it('not found todo test', async () => {
+      const fakeId = testTodo._id.toString().replace('1', '2')
       const res = await chai.
         request(app)
-        .get(`/todo/${'test'}`)
+        .get(`/todo/${fakeId}`)
       expect(res.status).to.equal(HTTP_STATUS_CODES.NotFoundError)
+    })
+
+    it('delete todo test', async () => {
+      const res = await chai.
+        request(app)
+        .delete(`/todo/${testTodo._id.toString()}`)
+      expect(res.status).to.equal(HTTP_STATUS_CODES.Success)
     })
 
     it('finished', async () => {
