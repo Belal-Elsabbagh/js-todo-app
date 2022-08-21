@@ -4,12 +4,11 @@ const chaiHttp = require("chai-http");
 const { expect } = chai;
 chai.use(chaiHttp);
 describe("Server!", () => {
-  it("get todos", (done) => {
-    chai.request(app).get("/todo")
-      .then((res) => {
-        expect(res.status).to.equal(200);
-      }).catch((err) => {
-        throw err;
-      }).finally(done => { done() });
+  it("get todos", async () => {
+    const res = await chai.request(app).get("/todo")
+    expect(res.status).to.equal(200);
   });
+  it('finished', async () => {
+    process.exit(0);
+  })
 });

@@ -4,8 +4,8 @@
   "description": "A practice todo app.",
   "main": "app.js",
   "scripts": {
-    "test": "mocha",
-    "start": "node app.js"
+    "start": "node app.js",
+    "test": "npm ci && mocha"
   },
   "keywords": [],
   "author": "Belal-Elsabbagh",
