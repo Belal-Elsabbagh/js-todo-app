@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "test": "npm ci && mocha --exit"
+    "test": "npm ci && mocha"
   },
   "keywords": [],
   "author": "Belal-Elsabbagh",
@@ -17,9 +17,9 @@
     "axios": "^0.27.2",
     "body-parser": "^1.20.0",
     "chai": "^3.5.0",
+    "chai-as-promised": "^7.1.1",
     "chai-http": "^4.3.0",
     "chakram": "^1.5.0",
-    "crypto": "^1.0.1",
     "dotenv": "^16.0.1",
     "ejs": "^3.1.8",
     "express": "^4.18.1",

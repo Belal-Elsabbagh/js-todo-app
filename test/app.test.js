@@ -1,12 +1,12 @@
 const app = require("../app");
 const chai = require("chai");
 const { expect } = chai;
-const chaiHttp = require("chai-http");
 const { HTTP_STATUS_CODES } = require('../middleware/errors')
 const postContentType = 'application/x-www-form-urlencoded'
 
 let testTodo = undefined;
-chai.use(chaiHttp);
+chai.use(require("chai-http"));
+chai.use(require('chai-as-promised'));
 describe("App Tests", () => {
 
   describe('Todo tests', () => {
@@ -69,7 +69,7 @@ describe("App Tests", () => {
 
     });
 
-    it('failed add todo error', async () => {
+    it('failed add todo verification error', async () => {
       const res = await chai
         .request(app)
         .post("/todo")
