@@ -7,11 +7,12 @@ try {
     let app = express()
     app.use('/assets', express.static('assets'))
     app.use(bodyParser.urlencoded({ extended: false }))
-    let database = require('./config/database')
+    const { databaseConnection } = require('./config/database')
     todoController(app)
     userController(app)
     app.use(errorHandler)
     app.listen(configVariables.server.portNumber)
+    module.exports = app
 } catch (err) {
     console.log(err);
     process.exit(1)

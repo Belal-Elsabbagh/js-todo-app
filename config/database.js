@@ -1,5 +1,5 @@
 let mongoose = require("mongoose");
-const {uri} = require('./configVariables').db
+const { uri } = require('./configVariables').db
 mongoose.connect(uri).then(() => {
     module.exports.databaseConnection = mongoose.connection
     console.log(`Successfully connected to ${uri}`);
