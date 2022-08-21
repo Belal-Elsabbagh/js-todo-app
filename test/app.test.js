@@ -66,7 +66,7 @@ describe("App Tests", () => {
       expect(res.body.timeCompleted).to.equal(null);
     });
 
-    it('failed add todo error test', async () => {
+    it('failed add todo error', async () => {
       const res = await chai
         .request(app)
         .post("/todo")
@@ -75,7 +75,7 @@ describe("App Tests", () => {
       expect(res.status).to.equal(HTTP_STATUS_CODES.UnprocessableEntity)
     })
 
-    it('not found todo test', async () => {
+    it('not found todo', async () => {
       const fakeId = testTodo._id.toString().replace('1', '2')
       const res = await chai.
         request(app)
@@ -83,7 +83,7 @@ describe("App Tests", () => {
       expect(res.status).to.equal(HTTP_STATUS_CODES.NotFoundError)
     })
 
-    it('delete todo test', async () => {
+    it('delete todo', async () => {
       const res = await chai.
         request(app)
         .delete(`/todo/${testTodo._id.toString()}`)
