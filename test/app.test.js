@@ -1,9 +1,10 @@
 const app = require("../app");
 const chai = require("chai");
+const { expect } = chai;
 const chaiHttp = require("chai-http");
 const { HTTP_STATUS_CODES } = require('../middleware/errors')
-const { expect } = chai;
 const postContentType = 'application/x-www-form-urlencoded'
+
 let testTodo = undefined;
 chai.use(chaiHttp);
 describe("App Tests", () => {
@@ -59,6 +60,13 @@ describe("App Tests", () => {
         .set('content-type', postContentType)
         .send({});
       expect(res.status).to.equal(HTTP_STATUS_CODES.UnprocessableEntity)
+    })
+
+    it('not found todo test', async () => {
+      const res = await chai.
+        request(app)
+        .get(`/todo/${'test'}`)
+      expect(res.status).to.equal(HTTP_STATUS_CODES.NotFoundError)
     })
 
     it('finished', async () => {
