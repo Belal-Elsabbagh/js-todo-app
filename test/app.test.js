@@ -14,6 +14,7 @@ describe("App Tests", () => {
     it("get todos", async () => {
       const res = await chai.request(app).get("/todo")
       expect(res.status).to.equal(200);
+      ;
     });
 
     it("add todo", async () => {
@@ -26,6 +27,7 @@ describe("App Tests", () => {
         });
       expect(res.status).to.equal(201);
       testTodo = res.body;
+      
     });
 
     it('get todo by id', async () => {
@@ -34,6 +36,7 @@ describe("App Tests", () => {
         .get(`/todo/${testTodo._id.toString()}`)
       expect(res.status).to.equal(200)
       expect(res.body.task).to.equal(testTodo.task)
+      
     })
 
     it('update todo task', async () =>{
@@ -47,6 +50,7 @@ describe("App Tests", () => {
       });
       expect(res.status).to.equal(200)
       expect(res.body.task).to.equal(updatedTask)
+      
     })
 
     it('complete todo', async () => {
@@ -55,6 +59,7 @@ describe("App Tests", () => {
         .patch(`/todo/complete/${testTodo._id.toString()}`)
       expect(res.status).to.equal(200);
       expect(res.body.isCompleted).to.equal(true);
+      
     });
 
     it('reset todo', async () => {
@@ -64,6 +69,7 @@ describe("App Tests", () => {
       expect(res.status).to.equal(200);
       expect(res.body.isCompleted).to.equal(false);
       expect(res.body.timeCompleted).to.equal(null);
+      
     });
 
     it('failed add todo error', async () => {
@@ -76,7 +82,9 @@ describe("App Tests", () => {
     })
 
     it('not found todo', async () => {
-      const fakeId = testTodo._id.toString().replace('1', '2')
+      let index = 1;
+      const fakeId = testTodo._id.toString().substring(0, index) + '2' + testTodo._id.toString().substring(index + 1);
+
       const res = await chai.
         request(app)
         .get(`/todo/${fakeId}`)
@@ -89,9 +97,5 @@ describe("App Tests", () => {
         .delete(`/todo/${testTodo._id.toString()}`)
       expect(res.status).to.equal(HTTP_STATUS_CODES.Success)
     })
-
-    it('finished', async () => {
-      process.exit(0);
-    });
   });
 });
