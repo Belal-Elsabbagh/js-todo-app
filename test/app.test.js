@@ -43,6 +43,7 @@ describe("App Tests", () => {
       expect(res.body.isCompleted).to.equal(false);
       expect(res.body.timeCompleted).to.equal(null);
     })
+    
     it('finished', async () => {
       process.exit(0);
     });
