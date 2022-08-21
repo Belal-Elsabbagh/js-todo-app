@@ -14,7 +14,6 @@ describe("App Tests", () => {
     it("get todos", async () => {
       const res = await chai.request(app).get("/todo")
       expect(res.status).to.equal(200);
-      ;
     });
 
     it("add todo", async () => {
@@ -25,9 +24,8 @@ describe("App Tests", () => {
         .send({
           task: "unit test task."
         });
-      expect(res.status).to.equal(201);
       testTodo = res.body;
-      
+      expect(res.status).to.equal(201);
     });
 
     it('get todo by id', async () => {
@@ -36,21 +34,20 @@ describe("App Tests", () => {
         .get(`/todo/${testTodo._id.toString()}`)
       expect(res.status).to.equal(200)
       expect(res.body.task).to.equal(testTodo.task)
-      
     })
 
-    it('update todo task', async () =>{
+    it('update todo task', async () => {
       const updatedTask = "updated task"
       const res = await chai
-      .request(app)
-      .patch(`/todo/${testTodo._id.toString()}`)
-      .set('content-type', postContentType)
-      .send({
-        task: updatedTask
-      });
+        .request(app)
+        .patch(`/todo/${testTodo._id.toString()}`)
+        .set('content-type', postContentType)
+        .send({
+          task: updatedTask
+        });
       expect(res.status).to.equal(200)
       expect(res.body.task).to.equal(updatedTask)
-      
+
     })
 
     it('complete todo', async () => {
@@ -59,7 +56,7 @@ describe("App Tests", () => {
         .patch(`/todo/complete/${testTodo._id.toString()}`)
       expect(res.status).to.equal(200);
       expect(res.body.isCompleted).to.equal(true);
-      
+
     });
 
     it('reset todo', async () => {
@@ -69,7 +66,7 @@ describe("App Tests", () => {
       expect(res.status).to.equal(200);
       expect(res.body.isCompleted).to.equal(false);
       expect(res.body.timeCompleted).to.equal(null);
-      
+
     });
 
     it('failed add todo error', async () => {
