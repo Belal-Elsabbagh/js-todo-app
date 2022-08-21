@@ -12,14 +12,14 @@ class User {
     addUser = async (userObject) => {
         try {
             if (await this.userEmailExists(userObject.email)) throw new InvalidDuplicateError('Email already exists')
-            userObject.password = this.#hashPassword(userObject.password)
+            userObject.password = this.hashPassword(userObject.password)
             return await userModel.create(userObject)
         } catch (err) {
             throw err
         }
     }
 
-    #hashPassword(password) {
+    hashPassword = (password) => {
         return crypto.createHash('sha256').update(password).digest('hex')
     }
 
@@ -70,7 +70,7 @@ class User {
 
     getLoginResult = async (user) =>{
         try{
-            user.password = this.#hashPassword(user.password)
+            user.password = this.hashPassword(user.password)
             let result = await this.runLoginQuery(user);
             if (result === false) throw new IncorrectCredentialsError('Incorrect Credentials to login');
             return result;
