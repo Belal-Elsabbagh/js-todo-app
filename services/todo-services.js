@@ -9,30 +9,12 @@ class Todo {
      * 
      * @param {string} todoId
      * @throws {NotFoundError} If the todo is not found
-     * @returns 
+     * @returns {Object} the found todo
      */
     getTodoById = async (todoId) => {
         let queryResult = await todoModel.findById(todoId);
         if (queryResult === null) throw new NotFoundError(`Todo with id ${todoId} was not found`);
         return queryResult;
-    }
-
-    completeTodo = async (todoId) => {
-        try {
-            let result = this.getTodoById(todoId)
-            return await todoModel.findByIdAndUpdate(todoId, { isCompleted: true, timeCompleted: Date.now() }, { new: true })
-        } catch (err) {
-            throw err
-        }
-    }
-
-    deleteTodo = async (todoId) => {
-        try {
-            let result = this.getTodoById(todoId)
-            return await todoModel.findByIdAndDelete(todoId)
-        } catch (err) {
-            throw err
-        }
     }
 
     updateTodo = async (todoId, updates) => {
@@ -44,10 +26,26 @@ class Todo {
         }
     }
 
+    completeTodo = async (todoId) => {
+        try {
+            return await this.updateTodo(todoId, { isCompleted: true, timeCompleted: Date.now() })
+        } catch (err) {
+            throw err
+        }
+    }
+
     resetTodo = async (todoId) => {
         try {
+            return await this.updateTodo(todoId, { isCompleted: false, timeCompleted: null })
+        } catch (err) {
+            throw err
+        }
+    }
+
+    deleteTodo = async (todoId) => {
+        try {
             let result = this.getTodoById(todoId)
-            return await todoModel.findByIdAndUpdate(todoId, { isCompleted: false, timeCompleted: null }, { new: true })
+            return await todoModel.findByIdAndDelete(todoId)
         } catch (err) {
             throw err
         }

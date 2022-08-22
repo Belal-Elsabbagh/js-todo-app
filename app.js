@@ -1,17 +1,18 @@
+require("dotenv").config();
 const express = require('express');
 const { todoController, userController } = require('./controllers');
 const { errorHandler } = require('./middleware/errors')
 const bodyParser = require('body-parser')
-const { verifyToken } = require('./middleware/auth')
-require('dotenv').config();
-const { API_PORT } = process.env
+const verifyToken = require('./middleware/auth')
+const { API_PORT, MONGODB_URI } = process.env
 
 try {
     let app = express()
     app.use('/assets', express.static('assets'))
     app.use(bodyParser.urlencoded({ extended: false }))
-    app.use(verifyToken)
+    //app.use('/user', verifyToken) // Deactivated to test the api without authentication
     const { databaseConnection } = require('./config/database')
+    console.log(`Successfully connected to ${MONGODB_URI}`);
     todoController(app)
     userController(app)
     app.use(errorHandler)

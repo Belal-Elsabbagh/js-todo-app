@@ -9,6 +9,35 @@ chai.use(require("chai-http"));
 chai.use(require('chai-as-promised'));
 describe("App Tests", () => {
 
+  describe('User auth tests', () => {
+
+    it('duplicate signup error', async () => {
+      const res = await chai
+        .request(app)
+        .post('/user/signup')
+        .set('content-type', postContentType)
+        .send({
+          username: 'testName',
+          email: 'belalAdel@gmail.com',
+          password: 'testPassword'
+        })
+      expect(res.status).to.equal(HTTP_STATUS_CODES.ConflictError)
+    })
+
+    it('bad email format error', async () => {
+      const res = await chai
+        .request(app)
+        .post('/user/signup')
+        .set('content-type', postContentType)
+        .send({
+          username: 'testName',
+          email: 'notAnEmail',
+          password: 'testPassword'
+        })
+      expect(res.status).to.equal(HTTP_STATUS_CODES.UnprocessableEntity)
+    })
+
+  })
   describe('Todo tests', () => {
 
     it("get todos", async () => {

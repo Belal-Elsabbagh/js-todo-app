@@ -5,7 +5,7 @@ const emailSchema = Joi.string().min(3).email().required();
 const passwordSchema = Joi.string().min(8).max(30).required();
 
 module.exports.signupSchema = Joi.object({ 
-    name: nameSchema,
+    username: nameSchema,
     email: emailSchema, 
     password: passwordSchema
 });

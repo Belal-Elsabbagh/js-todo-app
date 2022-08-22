@@ -74,14 +74,6 @@ class InvalidDuplicateError extends BaseError {
     }
 }
 
-errorHandler = (err, req, res, next) => {
-    if (!(err instanceof BaseError)) {
-        next(err);
-        return;
-    }
-    res.status(err.code).json(err);
-}
-
 module.exports = {
     HTTP_STATUS_CODES: HTTP_STATUS_CODES,
     BaseError: BaseError,
@@ -91,5 +83,11 @@ module.exports = {
     ForbiddenError: ForbiddenError,
     UnauthorizedError: UnauthorizedError,
     InvalidDuplicateError: InvalidDuplicateError,
-    errorHandler: errorHandler,
+    errorHandler: (err, req, res, next) => {
+        if (!(err instanceof BaseError)) {
+            next(err);
+            return;
+        }
+        res.status(err.code).json(err);
+    }
 }
