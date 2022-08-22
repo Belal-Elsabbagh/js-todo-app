@@ -2,7 +2,8 @@ const crypto = require('crypto')
 const { userModel } = require('../models')
 const { NotFoundError, IncorrectCredentialsError, InvalidDuplicateError } = require('../middleware/errors')
 const jsonwebtoken = require('jsonwebtoken')
-const { jwtConfig } = require('../config/configVariables')
+require('dotenv').config()
+const { JWT_SECRET_KEY } = process.env
 class User {
     /**
      * 
@@ -68,13 +69,13 @@ class User {
         return await userModel.find({})
     }
 
-    getLoginResult = async (user) =>{
-        try{
+    getLoginResult = async (user) => {
+        try {
             user.password = this.hashPassword(user.password)
             let result = await this.runLoginQuery(user);
             if (result === false) throw new IncorrectCredentialsError('Incorrect Credentials to login');
             return result;
-        } catch(err) {
+        } catch (err) {
             throw err
         }
     }
@@ -83,7 +84,7 @@ class User {
         try {
             let loggedInUser = await this.getLoginResult(user);
             return await this.generateUserToken(loggedInUser)
-        } catch(err) {
+        } catch (err) {
             throw err
         }
     }
@@ -91,7 +92,7 @@ class User {
     generateUserToken = async (userObject) => {
         try {
             let data = { user: userObject, time: Date.now() }
-            return jsonwebtoken.sign(data, jwtConfig.secretKey)
+            return jsonwebtoken.sign(data, JWT_SECRET_KEY, { expiresIn: "1h" })
         } catch (err) {
             throw err
         }
@@ -101,7 +102,7 @@ class User {
         try {
             let user = this.getUserById(userId)
             let data = { user: user, time: Date.now() }
-            return jsonwebtoken.sign(data, jwtConfig.secretKey)
+            return jsonwebtoken.sign(data, JWT_SECRET_KEY, { expiresIn: "1h" })
         } catch (err) {
             throw err
         }

@@ -2,16 +2,21 @@ const express = require('express');
 const { todoController, userController } = require('./controllers');
 const { errorHandler } = require('./middleware/errors')
 const bodyParser = require('body-parser')
-const configVariables = require('./config/configVariables');
+const { verifyToken } = require('./middleware/auth')
+require('dotenv').config();
+const { API_PORT } = process.env
+
 try {
     let app = express()
     app.use('/assets', express.static('assets'))
     app.use(bodyParser.urlencoded({ extended: false }))
+    app.use(verifyToken)
     const { databaseConnection } = require('./config/database')
     todoController(app)
     userController(app)
     app.use(errorHandler)
-    app.listen(configVariables.server.portNumber)
+    app.listen(API_PORT)
+    console.log(`Server started on port ${API_PORT}`)
     module.exports = app
 } catch (err) {
     console.log(err);
