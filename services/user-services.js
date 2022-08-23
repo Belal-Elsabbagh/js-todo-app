@@ -1,6 +1,6 @@
 const crypto = require('crypto')
 const { userModel } = require('../models')
-const { NotFoundError, IncorrectCredentialsError, InvalidDuplicateError } = require('../middleware/errors')
+const { NotFoundError, IncorrectCredentialsError, InvalidDuplicateError, NotAuthenticatedError } = require('../middleware/errors')
 const jsonwebtoken = require('jsonwebtoken')
 require('dotenv').config()
 const { JWT_SECRET_KEY } = process.env
@@ -80,6 +80,15 @@ class User {
         }
     }
 
+    deleteUser = async (userId) => {
+        try {
+            await this.getUserById(userId)
+            return await userModel.findByIdAndDelete(userId)
+        } catch (err) {
+            throw err
+        }
+    }
+
     login = async (user) => {
         try {
             let loggedInUser = await this.getLoginResult(user);
@@ -98,13 +107,11 @@ class User {
         }
     }
 
-    generateUserTokenFromUserId = async (userId) => {
+    verifyUserToken = async (userToken) => {
         try {
-            let user = this.getUserById(userId)
-            let data = { user: user, time: Date.now() }
-            return jsonwebtoken.sign(data, JWT_SECRET_KEY, { expiresIn: "1h" })
+            return jsonwebtoken.verify(userToken, JWT_SECRET_KEY);
         } catch (err) {
-            throw err
+            throw new NotAuthenticatedError("A token is required for authentication")
         }
     }
 }

@@ -1,6 +1,6 @@
 const validate = require('../validation/validate')
 const { signupSchema, loginSchema } = require('../validation/schemas/')
-const { addUser, getUsers, getUserByEmail, login, generateToken } = require('../services/').userServices
+const { addUser, deleteUser, getUsers, getUserByEmail, login, generateToken } = require('../services/').userServices
 
 module.exports = (app) => {
     app.get('/user', async (req, res, next) => {
@@ -14,7 +14,7 @@ module.exports = (app) => {
 
     app.get('/user/:email', async (req, res, next) => {
         try {
-            let result = getUserByEmail(req.params.email)
+            let result = await getUserByEmail(req.params.email)
             res.status(200).json(result)
         }
         catch (err) {
@@ -47,6 +47,15 @@ module.exports = (app) => {
         try {
             const userId = req.params.userId
             res.status(200).send(await generateToken(userId))
+        } catch(err) {
+            next(err)
+        }
+    })
+
+    app.delete('/user/:userId', async (req, res, next) => {
+        try {
+            const userId = req.params.userId
+            res.status(200).json(await deleteUser(userId))
         } catch(err) {
             next(err)
         }

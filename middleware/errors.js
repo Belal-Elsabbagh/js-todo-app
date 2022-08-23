@@ -3,7 +3,7 @@ const HTTP_STATUS_CODES = {
     Success: 200,
     Created: 201,
     BadRequest: 400,
-    Unauthorized: 401,
+    NotAuthenticated: 401,
     Forbidden: 403,
     NotFoundError: 404,
     ConflictError: 409,
@@ -53,7 +53,7 @@ class NotFoundError extends BaseError {
 
 class IncorrectCredentialsError extends BaseError {
     constructor(message) {
-        super(message, HTTP_STATUS_CODES.Unauthorized);
+        super(message, HTTP_STATUS_CODES.NotAuthenticated);
     }
 }
 
@@ -63,9 +63,9 @@ class ForbiddenError extends BaseError {
     }
 }
 
-class UnauthorizedError extends BaseError {
+class NotAuthenticatedError extends BaseError {
     constructor(message) {
-        super(message, HTTP_STATUS_CODES.Unauthorized);
+        super(message, HTTP_STATUS_CODES.NotAuthenticated);
     }
 }
 class InvalidDuplicateError extends BaseError {
@@ -81,7 +81,7 @@ module.exports = {
     NotFoundError: NotFoundError,
     IncorrectCredentialsError: IncorrectCredentialsError,
     ForbiddenError: ForbiddenError,
-    UnauthorizedError: UnauthorizedError,
+    NotAuthenticatedError: NotAuthenticatedError,
     InvalidDuplicateError: InvalidDuplicateError,
     errorHandler: (err, req, res, next) => {
         if (!(err instanceof BaseError)) {
