@@ -3,7 +3,7 @@ const { signupSchema, loginSchema } = require('../validation/schemas/')
 const { addUser, deleteUser, getUsers, getUserByEmail, login, generateToken } = require('../services/').userServices
 
 module.exports = (app) => {
-    app.get('/user', async (req, res, next) => {
+    app.get('/users', async (req, res, next) => {
         try {
             res.status(200).json(await getUsers())
         }
@@ -12,7 +12,7 @@ module.exports = (app) => {
         }
     });
 
-    app.get('/user/:email', async (req, res, next) => {
+    app.get('/users/:email', async (req, res, next) => {
         try {
             let result = await getUserByEmail(req.params.email)
             res.status(200).json(result)
@@ -22,7 +22,7 @@ module.exports = (app) => {
         }
     });
 
-    app.post('/user/signup', async (req, res, next) => {
+    app.post('/users/signup', async (req, res, next) => {
         try {
             let user = await validate(signupSchema, req.body);
             res.status(201).json(await addUser(user));
@@ -32,7 +32,7 @@ module.exports = (app) => {
         }
     });
 
-    app.post('/user/login', async (req, res, next) => {
+    app.post('/users/login', async (req, res, next) => {
         try {
             let user = await validate(loginSchema, req.body);
             let userToken = await login(user)
@@ -43,16 +43,7 @@ module.exports = (app) => {
         }
     })
 
-    app.post('/user/generateToken/:userId', async (req, res, next) => {
-        try {
-            const userId = req.params.userId
-            res.status(200).send(await generateToken(userId))
-        } catch(err) {
-            next(err)
-        }
-    })
-
-    app.delete('/user/:userId', async (req, res, next) => {
+    app.delete('/users/:userId', async (req, res, next) => {
         try {
             const userId = req.params.userId
             res.status(200).json(await deleteUser(userId))

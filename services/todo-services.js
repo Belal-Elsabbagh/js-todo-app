@@ -55,6 +55,10 @@ class Todo {
         return await todoModel.find({})
     }
 
+    getTodos = async (filter) => {
+        return await todoModel.find()
+    }
+
     getDoneTodos = async () => {
         return await todoModel.find({ isCompleted: true })
     }

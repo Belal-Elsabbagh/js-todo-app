@@ -1,6 +1,4 @@
-const jwt = require("jsonwebtoken");
-const { HTTP_STATUS_CODES } = require('./errors')
-const { verifyUserToken } = require('../services').userServices
+const verifyUserToken = require('./verifyUserToken')
 module.exports = async (req, res, next) => {
     const token = req.headers.authorization.split(' ')[1];
     try {

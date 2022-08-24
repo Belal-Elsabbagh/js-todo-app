@@ -4,6 +4,7 @@ const { NotFoundError, IncorrectCredentialsError, InvalidDuplicateError, NotAuth
 const jsonwebtoken = require('jsonwebtoken')
 require('dotenv').config()
 const { JWT_SECRET_KEY } = process.env
+const MONGODB_DUPLICATE_KEY_ERR_CODE = 11000
 class User {
     /**
      * 
@@ -12,10 +13,10 @@ class User {
      */
     addUser = async (userObject) => {
         try {
-            if (await this.userEmailExists(userObject.email)) throw new InvalidDuplicateError('Email already exists')
             userObject.password = this.hashPassword(userObject.password)
             return await userModel.create(userObject)
         } catch (err) {
+            if (err.code === MONGODB_DUPLICATE_KEY_ERR_CODE) throw new InvalidDuplicateError('Email already exists')
             throw err
         }
     }
@@ -104,14 +105,6 @@ class User {
             return jsonwebtoken.sign(data, JWT_SECRET_KEY, { expiresIn: "1h" })
         } catch (err) {
             throw err
-        }
-    }
-
-    verifyUserToken = async (userToken) => {
-        try {
-            return jsonwebtoken.verify(userToken, JWT_SECRET_KEY);
-        } catch (err) {
-            throw new NotAuthenticatedError("A token is required for authentication")
         }
     }
 }

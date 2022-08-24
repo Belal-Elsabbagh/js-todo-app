@@ -10,7 +10,7 @@ try {
     let app = express()
     app.use('/assets', express.static('assets'))
     app.use(bodyParser.urlencoded({ extended: false }))
-    app.use('/todo', verifyToken) // Deactivated to test the api without authentication
+    app.use('/todos', verifyToken) // Deactivated to test the api without authentication
     const { databaseConnection } = require('./config/database')
     console.log(`Successfully connected to ${MONGODB_URI}`);
     todoController(app)
