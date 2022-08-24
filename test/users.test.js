@@ -1,6 +1,6 @@
 const app = require("../app");
-const chai = require("chai");
-const { expect } = chai;
+const request = require("supertest");
+const { expect } = require("chai");
 const { HTTP_STATUS_CODES } = require('../middleware/errors')
 const postContentType = 'application/x-www-form-urlencoded'
 const verifyUserToken = require('../middleware/verifyUserToken')
@@ -26,14 +26,11 @@ const testUserData = {
 }
 let testUserResult = undefined;
 let testUserToken = undefined;
-chai.use(require("chai-http"));
-chai.use(require('chai-as-promised'));
 
 describe('User auth tests', () => {
 
     it('bad email format error', async () => {
-        const res = await chai
-            .request(app)
+        const res = await request(app)
             .post('/users/signup')
             .set('content-type', postContentType)
             .send(testUserData.badEmailSignupData)
@@ -41,8 +38,7 @@ describe('User auth tests', () => {
     })
 
     it('bad password format error', async () => {
-        const res = await chai
-            .request(app)
+        const res = await request(app)
             .post('/users/signup')
             .set('content-type', postContentType)
             .send(testUserData.badPasswordSignupData)
@@ -50,8 +46,7 @@ describe('User auth tests', () => {
     })
 
     it('signup success', async () => {
-        const res = await chai
-            .request(app)
+        const res = await request(app)
             .post('/users/signup')
             .set('content-type', postContentType)
             .send(testUserData.signupData)
@@ -60,8 +55,7 @@ describe('User auth tests', () => {
     })
 
     it('duplicate signup error', async () => {
-        const res = await chai
-            .request(app)
+        const res = await request(app)
             .post('/users/signup')
             .set('content-type', postContentType)
             .send(testUserData.signupData)
@@ -69,16 +63,14 @@ describe('User auth tests', () => {
     })
 
     it('find by email success', async () => {
-        const res = await chai
-            .request(app)
+        const res = await request(app)
             .get(`/users/${testUserResult.email}`)
         expect(res.status).to.equal(HTTP_STATUS_CODES.Success)
         expect(res.body.email).to.equal(testUserResult.email)
     })
 
     it('incorrect login credentials error', async () => {
-        const res = await chai
-            .request(app)
+        const res = await request(app)
             .post('/users/login')
             .set('content-type', postContentType)
             .send({
@@ -89,8 +81,7 @@ describe('User auth tests', () => {
     })
 
     it('login success', async () => {
-        const res = await chai
-            .request(app)
+        const res = await request(app)
             .post('/users/login')
             .set('content-type', postContentType)
             .send({
@@ -119,8 +110,7 @@ describe('User auth tests', () => {
     })
 
     it('delete user', async () => {
-        const res = await chai
-            .request(app)
+        const res = await request(app)
             .delete(`/users/${testUserResult._id.toString()}`);
         expect(res.status).to.equal(HTTP_STATUS_CODES.Success);
     });
