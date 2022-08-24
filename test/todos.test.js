@@ -9,7 +9,6 @@ chai.use(require("chai-http"));
 chai.use(require('chai-as-promised'));
 
 describe('Todo tests', () => {
-
     before(async () => {
         const res = await chai
             .request(app)
@@ -19,7 +18,6 @@ describe('Todo tests', () => {
                 email: 'belalAdel@gmail.com',
                 password: '12345678'
             })
-        expect(res.status).to.equal(HTTP_STATUS_CODES.Success)
         testUserToken = res.body
     })
 
