@@ -86,22 +86,8 @@ class User {
     login = async (user) => {
         try {
             let loggedInUser = await this.getLoginResult(user);
-            let token = await this.generateUserToken(loggedInUser)
+            userModel.generateToken(loggedInUser)
             return token
-        } catch (err) {
-            throw err
-        }
-    }
-
-    generateUserToken = async (userObject) => {
-        try {
-            let data = {
-                user: {
-                    email: userObject.email,
-                    role: userObject.role
-                }, time: Date.now()
-            }
-            return jsonwebtoken.sign(data, JWT_SECRET_KEY, { expiresIn: "1h" })
         } catch (err) {
             throw err
         }

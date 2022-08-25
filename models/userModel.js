@@ -26,4 +26,18 @@ userSchema.pre('findOne', function(next) {
     next()
 })
 
+userSchema.static('generateToken', function(userObject) {
+    try {
+        let data = {
+            user: {
+                email: userObject.email,
+                role: userObject.role
+            }, time: Date.now()
+        }
+        return jsonwebtoken.sign(data, JWT_SECRET_KEY, { expiresIn: "1h" })
+    } catch (err) {
+        throw err
+    }
+})
+
 module.exports = mongoose.model('users', userSchema)
