@@ -1,6 +1,7 @@
-const validate = require('../validation/validate')
-const { todoSchema } = require('../validation/schemas');
-const { ValidationError, ForbiddenError } = require('../middleware/errors');
+import {Request, Response} from 'express';
+import validate from '../validation/validate';
+import todoSchema from '../validation/schemas/todo';
+import { ValidationError, ForbiddenError } from '../middleware/errors';
 const {
     addTodo,
     completeTodo,
@@ -10,17 +11,17 @@ const {
     deleteTodo,
     getAllTodos,
     getTodos
-} = require('../services/').todoServices;
-const authorizationSchema = require('../auth/index');
-module.exports = (app) => {
+} = require('../services').todoServices;
+import authorizationSchema from '../auth/index';
+export default (app: any) => {
 
-    app.get('/todos', async (req, res) => {
+    app.get('/todos', async (req: Request, res: Response) => {
         if (!authorizationSchema.can(req.tokenData.user.role).readAny('todo').granted)
             throw new ForbiddenError('You are not allowed to read todos')
         res.status(200).json(await getAllTodos());
     });
 
-    app.get('/todos/:id', async (req, res, next) => {
+    app.get('/todos/:id', async (req: Request, res: Response, next) => {
         try {
             if (!authorizationSchema.can(req.tokenData.user.role).readAny('todo').granted)
                 throw new ForbiddenError('You are not allowed to read todos')
@@ -31,7 +32,7 @@ module.exports = (app) => {
         }
     });
 
-    app.get('/todos/:isDone', async (req, res, next) => {
+    app.get('/todos/:isDone', async (req: Request, res: Response, next) => {
         try {
             if (req.params.isDone !== 'true' || req.params.isDone !== 'false')
                 throw new ValidationError('isDone must be \'true\' or \'false\'')
@@ -44,7 +45,7 @@ module.exports = (app) => {
         }
     });
 
-    app.post('/todos', async (req, res, next) => {
+    app.post('/todos', async (req: Request, res: Response, next) => {
         try {
             if (!authorizationSchema.can(req.tokenData.user.role).createAny('todo').granted)
                 throw new ForbiddenError('You are not allowed to create todos')
@@ -56,7 +57,7 @@ module.exports = (app) => {
         }
     });
 
-    app.patch('/todos/:id', async (req, res, next) => {
+    app.patch('/todos/:id', async (req: Request, res: Response, next) => {
         const updates = req.body
         const id = req.params.id
         try {
@@ -68,7 +69,7 @@ module.exports = (app) => {
         }
     })
 
-    app.patch('/todos/:id/complete', async (req, res, next) => {
+    app.patch('/todos/:id/complete', async (req: Request, res: Response, next) => {
         const id = req.params.id
         try {
             if (!authorizationSchema.can(req.tokenData.user.role).updateAny('todo').granted)
@@ -79,7 +80,7 @@ module.exports = (app) => {
         }
     })
 
-    app.patch('/todos/:id/reset', async (req, res, next) => {
+    app.patch('/todos/:id/reset', async (req: Request, res: Response, next) => {
         const id = req.params.id
         try {
             if (!authorizationSchema.can(req.tokenData.user.role).updateAny('todo').granted)
@@ -90,7 +91,7 @@ module.exports = (app) => {
         }
     })
 
-    app.delete('/todos/:id', async (req, res, next) => {
+    app.delete('/todos/:id', async (req: Request, res: Response, next) => {
         try {
             if (!authorizationSchema.can(req.tokenData.user.role).deleteAny('todo').granted)
                 throw new ForbiddenError('You are not allowed to delete todos')

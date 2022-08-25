@@ -14,4 +14,4 @@ let grantsObject = {
         }
     }
 };
-module.exports = new AccessControl(grantsObject);
+export default new AccessControl(grantsObject);

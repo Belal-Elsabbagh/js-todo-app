@@ -1,8 +1,8 @@
 const validate = require('../validation/validate')
-const { signupSchema, loginSchema } = require('../validation/schemas/')
-const { addUser, deleteUser, getUsers, getUserByEmail, login, generateToken } = require('../services/').userServices
+const { signupSchema, loginSchema } = require('../validation/schemas')
+const { addUser, deleteUser, getUsers, getUserByEmail, login, generateToken } = require('../services').userServices
 
-module.exports = (app) => {
+export default (app) => {
     app.get('/users', async (req, res, next) => {
         try {
             res.status(200).json(await getUsers())

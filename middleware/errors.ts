@@ -14,9 +14,9 @@ const HTTP_STATUS_CODES = {
 }
 Object.freeze(HTTP_STATUS_CODES)
 
-class BaseError extends Error {
+export class BaseError extends Error {
     code = HTTP_STATUS_CODES.Default;
-    constructor(message, errCode = HTTP_STATUS_CODES.Default) {
+    constructor(message: string | undefined, errCode = HTTP_STATUS_CODES.Default) {
         super(message);
         this.code = errCode;
     }
@@ -29,9 +29,9 @@ class BaseError extends Error {
     }
 }
 
-class ValidationError extends BaseError {
+export class ValidationError extends BaseError {
     details = null
-    constructor(message, details) {
+    constructor(message: string, details = null) {
         super(message, HTTP_STATUS_CODES.UnprocessableEntity);
         this.details = details
     }
@@ -45,49 +45,39 @@ class ValidationError extends BaseError {
     }
 }
 
-class NotFoundError extends BaseError {
-    constructor(message) {
+export class NotFoundError extends BaseError {
+    constructor(message: any) {
         super(message, HTTP_STATUS_CODES.NotFoundError);
     }
 }
 
-class IncorrectCredentialsError extends BaseError {
-    constructor(message) {
+export class IncorrectCredentialsError extends BaseError {
+    constructor(message: any) {
         super(message, HTTP_STATUS_CODES.NotAuthenticated);
     }
 }
 
-class ForbiddenError extends BaseError {
-    constructor(message) {
+export class ForbiddenError extends BaseError {
+    constructor(message: string) {
         super(message, HTTP_STATUS_CODES.Forbidden);
     }
 }
 
-class NotAuthenticatedError extends BaseError {
-    constructor(message) {
+export class NotAuthenticatedError extends BaseError {
+    constructor(message: string) {
         super(message, HTTP_STATUS_CODES.NotAuthenticated);
     }
 }
-class InvalidDuplicateError extends BaseError {
-    constructor(message) {
+export class InvalidDuplicateError extends BaseError {
+    constructor(message: any) {
         super(message, HTTP_STATUS_CODES.ConflictError);
     }
 }
 
-module.exports = {
-    HTTP_STATUS_CODES: HTTP_STATUS_CODES,
-    BaseError: BaseError,
-    ValidationError: ValidationError,
-    NotFoundError: NotFoundError,
-    IncorrectCredentialsError: IncorrectCredentialsError,
-    ForbiddenError: ForbiddenError,
-    NotAuthenticatedError: NotAuthenticatedError,
-    InvalidDuplicateError: InvalidDuplicateError,
-    errorHandler: (err, req, res, next) => {
-        if (!(err instanceof BaseError)) {
-            next(err);
-            return;
-        }
-        res.status(err.code).json(err);
+export default (err: any, req: any, res: any, next: any) => {
+    if (!(err instanceof BaseError)) {
+        next(err);
+        return;
     }
+    res.status(err.code).json(err);
 }

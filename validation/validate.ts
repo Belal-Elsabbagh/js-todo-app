@@ -1,4 +1,4 @@
-const {ValidationError} = require('../middleware/errors')
+import { ValidationError } from '../middleware/errors'
 
 /**
  * 
@@ -7,10 +7,10 @@ const {ValidationError} = require('../middleware/errors')
  * @throws {ValidationError} If the object to validate is not valid
  * @returns 
  */
-module.exports = async (schemaObject, objectToValidate) => {
+export default async (schemaObject: any, objectToValidate:any) => {
     try {
         return await schemaObject.validateAsync(objectToValidate)
-    } catch (err) {
+    } catch (err: any) {
         throw new ValidationError(`Failed to validate`, err.details)
     }
 }
