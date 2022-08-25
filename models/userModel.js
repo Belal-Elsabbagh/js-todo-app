@@ -29,10 +29,10 @@ userSchema.pre('findOne', function(next) {
 userSchema.static('generateToken', function(userObject) {
     try {
         let data = {
-            user: {
                 email: userObject.email,
-                role: userObject.role
-            }, time: Date.now()
+                role: userObject.role,
+                id: userObject._id.toString(), 
+                timeCreated: Date.now()
         }
         return jsonwebtoken.sign(data, JWT_SECRET_KEY, { expiresIn: "1h" })
     } catch (err) {

@@ -16,14 +16,14 @@ import authorizationSchema from '../auth/index';
 export default (app: any) => {
 
     app.get('/todos', async (req: Request, res: Response) => {
-        if (!authorizationSchema.can(req.tokenData.user.role).readAny('todo').granted)
+        if (!authorizationSchema.can(req.tokenData.role).readAny('todo').granted)
             throw new ForbiddenError('You are not allowed to read todos')
         res.status(200).json(await getAllTodos());
     });
 
     app.get('/todos/:id', async (req: Request, res: Response, next) => {
         try {
-            if (!authorizationSchema.can(req.tokenData.user.role).readAny('todo').granted)
+            if (!authorizationSchema.can(req.tokenData.role).readAny('todo').granted)
                 throw new ForbiddenError('You are not allowed to read todos')
             let todo = await getTodoById(req.params.id);
             res.status(200).json(todo)
@@ -34,7 +34,7 @@ export default (app: any) => {
 
     app.get('/todos/:isDone', async (req: Request, res: Response, next) => {
         try {
-            if (req.params.isDone !== 'true' || req.params.isDone !== 'false')
+            if (!(req.params.isDone) in ['true', 'false'])
                 throw new ValidationError('isDone must be \'true\' or \'false\'')
             if (!authorizationSchema.can(req.tokenData.user.role).readAny('todo').granted)
                 throw new ForbiddenError('You are not allowed to read todos')
@@ -47,7 +47,7 @@ export default (app: any) => {
 
     app.post('/todos', async (req: Request, res: Response, next) => {
         try {
-            if (!authorizationSchema.can(req.tokenData.user.role).createAny('todo').granted)
+            if (!authorizationSchema.can(req.tokenData.role).createAny('todo').granted)
                 throw new ForbiddenError('You are not allowed to create todos')
             let todo = await validate(todoSchema, req.body)
             res.status(201).json(await addTodo(todo))
@@ -61,7 +61,7 @@ export default (app: any) => {
         const updates = req.body
         const id = req.params.id
         try {
-            if (!authorizationSchema.can(req.tokenData.user.role).updateAny('todo').granted)
+            if (!authorizationSchema.can(req.tokenData.role).updateAny('todo').granted)
                 throw new ForbiddenError('You are not allowed to update todos')
             res.status(200).json(await updateTodo(id, updates))
         } catch (err) {
@@ -72,7 +72,7 @@ export default (app: any) => {
     app.patch('/todos/:id/complete', async (req: Request, res: Response, next) => {
         const id = req.params.id
         try {
-            if (!authorizationSchema.can(req.tokenData.user.role).updateAny('todo').granted)
+            if (!authorizationSchema.can(req.tokenData.role).updateAny('todo').granted)
                 throw new ForbiddenError('You are not allowed to update todos')
             res.status(200).json(await completeTodo(id))
         } catch (err) {
@@ -83,7 +83,7 @@ export default (app: any) => {
     app.patch('/todos/:id/reset', async (req: Request, res: Response, next) => {
         const id = req.params.id
         try {
-            if (!authorizationSchema.can(req.tokenData.user.role).updateAny('todo').granted)
+            if (!authorizationSchema.can(req.tokenData.role).updateAny('todo').granted)
                 throw new ForbiddenError('You are not allowed to update todos')
             res.status(200).json(await resetTodo(id))
         } catch (err) {
@@ -93,7 +93,7 @@ export default (app: any) => {
 
     app.delete('/todos/:id', async (req: Request, res: Response, next) => {
         try {
-            if (!authorizationSchema.can(req.tokenData.user.role).deleteAny('todo').granted)
+            if (!authorizationSchema.can(req.tokenData.role).deleteAny('todo').granted)
                 throw new ForbiddenError('You are not allowed to delete todos')
             res.status(200).json(await deleteTodo(req.params.id))
         }
