@@ -1,4 +1,6 @@
-describe("App Tests", () => {
-    require('./users.test')
-    require('./todos.test')
+
+
+describe("App Tests", async () => {
+    await require('./usersService.test').test()
+    require('./todosService.test')
 });

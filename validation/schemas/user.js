@@ -11,6 +11,6 @@ module.exports.signupSchema = Joi.object({
 });
 
 module.exports.loginSchema = Joi.object({ 
-    email:emailSchema, 
+    email: Joi.string().required(), 
     password: Joi.string().required()
 });

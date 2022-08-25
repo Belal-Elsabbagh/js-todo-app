@@ -1,4 +1,3 @@
-const crypto = require('crypto')
 const { userModel } = require('../models')
 const { NotFoundError, IncorrectCredentialsError, InvalidDuplicateError, NotAuthenticatedError } = require('../middleware/errors')
 const jsonwebtoken = require('jsonwebtoken')
@@ -13,16 +12,11 @@ class User {
      */
     addUser = async (userObject) => {
         try {
-            userObject.password = this.hashPassword(userObject.password)
             return await userModel.create(userObject)
         } catch (err) {
             if (err.code === MONGODB_DUPLICATE_KEY_ERR_CODE) throw new InvalidDuplicateError('Email already exists')
             throw err
         }
-    }
-
-    hashPassword = (password) => {
-        return crypto.createHash('sha256').update(password).digest('hex')
     }
 
     /**
@@ -72,7 +66,6 @@ class User {
 
     getLoginResult = async (user) => {
         try {
-            user.password = this.hashPassword(user.password)
             let result = await this.runLoginQuery(user);
             if (result === false) throw new IncorrectCredentialsError('Incorrect Credentials to login');
             return result;
@@ -93,7 +86,8 @@ class User {
     login = async (user) => {
         try {
             let loggedInUser = await this.getLoginResult(user);
-            return await this.generateUserToken(loggedInUser)
+            let token = await this.generateUserToken(loggedInUser)
+            return token
         } catch (err) {
             throw err
         }
@@ -101,7 +95,12 @@ class User {
 
     generateUserToken = async (userObject) => {
         try {
-            let data = { user: userObject, time: Date.now() }
+            let data = {
+                user: {
+                    email: userObject.email,
+                    role: userObject.role
+                }, time: Date.now()
+            }
             return jsonwebtoken.sign(data, JWT_SECRET_KEY, { expiresIn: "1h" })
         } catch (err) {
             throw err
