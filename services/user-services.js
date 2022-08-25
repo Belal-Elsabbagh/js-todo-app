@@ -1,10 +1,7 @@
 const { userModel } = require('../models')
 const { NotFoundError, IncorrectCredentialsError, InvalidDuplicateError, NotAuthenticatedError } = require('../middleware/errors')
-const jsonwebtoken = require('jsonwebtoken')
-require('dotenv').config()
-const { JWT_SECRET_KEY } = process.env
 const MONGODB_DUPLICATE_KEY_ERR_CODE = 11000
-class User {
+class UserServices {
     /**
      * 
      * @param {Object} userObject The user object to add to the database
@@ -94,4 +91,4 @@ class User {
     }
 }
 
-module.exports = new User();
+module.exports = new UserServices();
