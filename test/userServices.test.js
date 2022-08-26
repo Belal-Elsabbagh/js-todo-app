@@ -4,7 +4,7 @@ const validate = require('../validation/validate')
 const BaseTest = require('../lib/BaseTest')
 const { signupSchema } = require('../validation/schemas/user')
 const verifyUserToken = require('../middleware/verifyUserToken')
-const { addUser, deleteUser, getUsers, getUserByEmail, login } = require('../services/').userServices
+const { addUser, deleteUser, getUsers, getUserByEmail, login } = require('../services').userServices
 let testUserResult = undefined;
 
 class UsersServicesTest extends BaseTest {
@@ -15,27 +15,27 @@ class UsersServicesTest extends BaseTest {
     test = async () => {
         describe('User tervices tests', () => {
 
-            it('bad email format error', async () => {
+            it('bad email format error is detected', async () => {
                 try {
                     const validationResult = await validate(signupSchema, this.testData.badEmailSignupData);
                     expect(validationResult.email).toEqual(null);
                 } catch (err) {
                     expect(err.code).toEqual(HTTP_STATUS_CODES.UnprocessableEntity)
-                    expect(err.details[0].message).to.match(/(?:email)/)
+                    expect(err.details[0].message).toMatch(/(?:email)/)
                 }
             })
 
-            it('bad password format error', async () => {
+            it('bad password format error is detected', async () => {
                 try {
                     const validationResult = await validate(signupSchema, this.testData.badPasswordSignupData);
                     expect(validationResult.email).toEqual(null);
                 } catch (err) {
                     expect(err.code).toEqual(HTTP_STATUS_CODES.UnprocessableEntity)
-                    expect(err.details[0].message).to.match(/(?:password)/)
+                    expect(err.details[0].message).toMatch(/(?:password)/)
                 }
             })
 
-            it('signup success', async () => {
+            it('signup process is successful', async () => {
                 try {
                     const res = await addUser(this.testData.validSignupData)
                     expect(res.email).toEqual(this.testData.validSignupData.email)
@@ -45,7 +45,7 @@ class UsersServicesTest extends BaseTest {
                 }
             })
 
-            it('duplicate signup error', async () => {
+            it('duplicate signup error is detected', async () => {
                 try {
                     const res = await addUser(this.testData.validSignupData)
                     expect(res).toBeUndefined()
@@ -54,7 +54,7 @@ class UsersServicesTest extends BaseTest {
                 }
             })
 
-            it('get users success', async () => {
+            it('get users is successful', async () => {
                 try {
                     const res = await getUsers()
                     expect(res).toBeDefined()
@@ -63,7 +63,7 @@ class UsersServicesTest extends BaseTest {
                 }
             })
 
-            it('find by email success', async () => {
+            it('find by email is successful', async () => {
                 try {
                     let email = this.testData.validSignupData.email
                     const res = await getUserByEmail(email)
@@ -73,7 +73,7 @@ class UsersServicesTest extends BaseTest {
                 }
             })
 
-            it('incorrect login credentials error', async () => {
+            it('incorrect login credentials error is detected', async () => {
                 try {
                     const res = await login(this.testData.invalidLoginData)
                     expect(res).toBeUndefined()
@@ -97,7 +97,7 @@ class UsersServicesTest extends BaseTest {
                 
             })
 
-            it('delete user', async () => {
+            it('delete user is successful', async () => {
                 const res = await deleteUser(testUserResult._id.toString())
                 expect(res.email).toEqual(testUserResult.email);
             });
