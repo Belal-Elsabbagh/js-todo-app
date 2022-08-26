@@ -35,7 +35,7 @@ userSchema.static('generateToken', function(userObject) {
             user: {
                 email: userObject.email,
                 role: userObject.role
-            }, time: Date.now()
+            }, timeCreated: Date.now()
         }
         return jsonwebtoken.sign(data, JWT_SECRET_KEY, { expiresIn: "1h" })
     } catch (err) {
