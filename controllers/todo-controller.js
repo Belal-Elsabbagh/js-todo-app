@@ -12,6 +12,10 @@ const {
     getTodos
 } = require('../services/').todoServices;
 const authorizationSchema = require('../auth/index');
+/**
+ * 
+ * @param {Express} app 
+ */
 module.exports = (app) => {
 
     app.get('/todos', async (req, res) => {

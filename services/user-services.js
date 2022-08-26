@@ -83,8 +83,7 @@ class UserServices {
     login = async (user) => {
         try {
             let loggedInUser = await this.getLoginResult(user);
-            userModel.generateToken(loggedInUser)
-            return token
+            return userModel.generateToken(loggedInUser)
         } catch (err) {
             throw err
         }

@@ -7,11 +7,14 @@ const verifyToken = require('./middleware/auth')
 const { API_PORT, MONGODB_URI } = process.env
 
 try {
+    /**
+     * @type {Express}
+     */
     let app = express()
     app.use('/assets', express.static('assets'))
     app.use(bodyParser.urlencoded({ extended: false }))
     app.use('/todos', verifyToken) // Deactivate to test the api without authentication
-    const { databaseConnection } = require('./config/database')
+    require('./models')
     console.log(`Successfully connected to ${MONGODB_URI}`);
     todoController(app)
     userController(app)

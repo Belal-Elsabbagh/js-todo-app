@@ -1,5 +1,8 @@
 let mongoose = require('mongoose')
 let crypto = require('crypto')
+const jsonwebtoken = require("jsonwebtoken");
+require("dotenv").config();
+const {JWT_SECRET_KEY} = process.env
 
 const hashPassword = (password) => {
     return crypto.createHash('sha256').update(password).digest('hex')
