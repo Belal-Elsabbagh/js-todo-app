@@ -1,4 +1,4 @@
-const { describe, it, expect, beforeEach, afterEach } = require('@jest/globals');
+const { describe, it, expect, beforeEach, afterEach, beforeAll } = require('@jest/globals');
 const { HTTP_STATUS_CODES } = require('../middleware/errors')
 const validate = require('../validation/validate')
 const BaseTest = require('../lib/BaseTest')
@@ -123,6 +123,12 @@ const testUserData = {
         username: 'testName',
         email: 'notAnEmail',
         password: 'testPassword'
+    },
+
+    badSignupData: {
+        username: 'testName',
+        email: 'notAnEmail',
+        password: 'it'
     },
 
     badPasswordSignupData: {

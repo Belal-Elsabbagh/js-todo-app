@@ -19,7 +19,6 @@ userSchema.pre('save', function(next) {
     const user = this
     let hashedPassword = hashPassword(user.password)
     if (user.isModified('password')) user.password = hashedPassword
-    //console.log(this)
     next()
 })
 
@@ -29,7 +28,7 @@ userSchema.pre('findOne', function(next) {
     next()
 })
 
-userSchema.static('generateToken', function(userObject) {
+userSchema.static('generateToken', function(userObject, expiresIn = '1h') {
     try {
         let data = {
             user: {
@@ -37,7 +36,7 @@ userSchema.static('generateToken', function(userObject) {
                 role: userObject.role
             }, timeCreated: Date.now()
         }
-        return jsonwebtoken.sign(data, JWT_SECRET_KEY, { expiresIn: "1h" })
+        return jsonwebtoken.sign(data, JWT_SECRET_KEY, { expiresIn: expiresIn })
     } catch (err) {
         throw err
     }
