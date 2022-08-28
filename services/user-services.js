@@ -1,5 +1,5 @@
 const { userModel } = require('../models')
-const { NotFoundError, IncorrectCredentialsError, InvalidDuplicateError, NotAuthenticatedError } = require('../middleware/errors')
+const { NotFoundError, InvalidDuplicateEntryError, NotAuthenticatedError } = require('../middleware/errors')
 const MONGODB_DUPLICATE_KEY_ERR_CODE = 11000
 class UserServices {
     /**
@@ -11,7 +11,7 @@ class UserServices {
         try {
             return await userModel.create(userObject)
         } catch (err) {
-            if (err.code === MONGODB_DUPLICATE_KEY_ERR_CODE) throw new InvalidDuplicateError('Email already exists')
+            if (err.code === MONGODB_DUPLICATE_KEY_ERR_CODE) throw new InvalidDuplicateEntryError('Email already exists')
             throw err
         }
     }
@@ -64,7 +64,7 @@ class UserServices {
     getLoginResult = async (user) => {
         try {
             let result = await this.runLoginQuery(user);
-            if (result === false) throw new IncorrectCredentialsError('Incorrect Credentials to login');
+            if (result === false) throw new NotAuthenticatedError('Incorrect Credentials to login');
             return result;
         } catch (err) {
             throw err

@@ -20,7 +20,7 @@ class UsersServicesTest extends BaseTest {
                     const validationResult = await validate(signupSchema, this.testData.badEmailSignupData);
                     expect(validationResult.email).toEqual(null);
                 } catch (err) {
-                    expect(err.code).toEqual(HTTP_STATUS_CODES.UnprocessableEntity)
+                    expect(err.code).toEqual(HTTP_STATUS_CODES.ValidationError)
                     expect(err.details[0].message).toMatch(/(?:email)/)
                 }
             })
@@ -30,7 +30,7 @@ class UsersServicesTest extends BaseTest {
                     const validationResult = await validate(signupSchema, this.testData.badPasswordSignupData);
                     expect(validationResult.email).toEqual(null);
                 } catch (err) {
-                    expect(err.code).toEqual(HTTP_STATUS_CODES.UnprocessableEntity)
+                    expect(err.code).toEqual(HTTP_STATUS_CODES.ValidationError)
                     expect(err.details[0].message).toMatch(/(?:password)/)
                 }
             })
@@ -50,7 +50,7 @@ class UsersServicesTest extends BaseTest {
                     const res = await addUser(this.testData.validSignupData)
                     expect(res).toBeUndefined()
                 } catch (err) {
-                    expect(err.code).toEqual(HTTP_STATUS_CODES.ConflictError)
+                    expect(err.code).toEqual(HTTP_STATUS_CODES.InvalidDuplicateEntry)
                 }
             })
 

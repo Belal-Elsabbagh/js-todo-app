@@ -31,17 +31,16 @@ describe('Todo tests', () => {
     it('failed add todo verification error', async () => {
         try {
             const res = await validate(todoSchema, {});
+            expect(res).toBe(undefined);
         } catch (err) {
-            expect(err.code).toEqual(HTTP_STATUS_CODES.UnprocessableEntity)
+            expect(err.code).toEqual(HTTP_STATUS_CODES.ValidationError)
             expect(err.details[0].message).toMatch(/(?:task)/)
         }
     })
 
     describe("add todo", () => {
         let res;
-        const testTask = {
-            task: "unit test task."
-        }
+        const testTask = { task: "unit test task." }
         beforeAll(async () => {
             res = await addTodo(testTask)
         })
@@ -63,11 +62,9 @@ describe('Todo tests', () => {
         })
     });
 
-    describe('operations on existing todos', () => {
+    describe('operations on todos', () => {
         let testTodo;
-        const testTask = {
-            task: "unit test task."
-        }
+        const testTask = { task: "unit test task." }
         beforeAll(async () => {
             testTodo = await addTodo(testTask)
         })
@@ -82,6 +79,7 @@ describe('Todo tests', () => {
             const fakeId = testTodo._id.toString().substring(0, index) + '2' + testTodo._id.toString().substring(index + 1);
             try {
                 const res = await getTodoById(fakeId)
+                expect(res).toBe(undefined)
             } catch (err) {
                 expect(err.code).toEqual(HTTP_STATUS_CODES.NotFoundError)
             }
@@ -108,8 +106,7 @@ describe('Todo tests', () => {
         });
     
         afterAll(async () => {
-            const res = await deleteTodo(testTodo._id.toString())
-            expect(res.task).toEqual(testTodo.task);
+            await deleteTodo(testTodo._id.toString())
         })
     })
 });

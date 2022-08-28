@@ -6,8 +6,8 @@ const HTTP_STATUS_CODES = {
     NotAuthenticated: 401,
     Forbidden: 403,
     NotFoundError: 404,
-    ConflictError: 409,
-    UnprocessableEntity: 422,
+    InvalidDuplicateEntry: 409,
+    ValidationError: 422,
     InternalServerError: 500,
     BadGateway: 502,
     ServiceUnavailable: 503,
@@ -29,60 +29,44 @@ class BaseError extends Error {
     }
 }
 
-class ValidationError extends BaseError {
-    details = null
-    constructor(message, details) {
-        super(message, HTTP_STATUS_CODES.UnprocessableEntity);
-        this.details = details
-    }
-
-    toJSON() {
-        return {
-            errorCode: this.code,
-            errorMessage: this.message,
-            errorDetails: this.details,
-        }
-    }
-}
-
-class NotFoundError extends BaseError {
-    constructor(message) {
-        super(message, HTTP_STATUS_CODES.NotFoundError);
-    }
-}
-
-class IncorrectCredentialsError extends BaseError {
-    constructor(message) {
-        super(message, HTTP_STATUS_CODES.NotAuthenticated);
-    }
-}
-
-class ForbiddenError extends BaseError {
-    constructor(message) {
-        super(message, HTTP_STATUS_CODES.Forbidden);
-    }
-}
-
-class NotAuthenticatedError extends BaseError {
-    constructor(message) {
-        super(message, HTTP_STATUS_CODES.NotAuthenticated);
-    }
-}
-class InvalidDuplicateError extends BaseError {
-    constructor(message) {
-        super(message, HTTP_STATUS_CODES.ConflictError);
-    }
-}
-
 module.exports = {
     HTTP_STATUS_CODES: HTTP_STATUS_CODES,
     BaseError: BaseError,
-    ValidationError: ValidationError,
-    NotFoundError: NotFoundError,
-    IncorrectCredentialsError: IncorrectCredentialsError,
-    ForbiddenError: ForbiddenError,
-    NotAuthenticatedError: NotAuthenticatedError,
-    InvalidDuplicateError: InvalidDuplicateError,
+    ValidationError: class ValidationError extends BaseError {
+        details = null
+        constructor(message, details) {
+            super(message, HTTP_STATUS_CODES.ValidationError);
+            this.details = details
+        }
+    
+        toJSON() {
+            return {
+                errorCode: this.code,
+                errorMessage: this.message,
+                errorDetails: this.details,
+            }
+        }
+    },
+    NotFoundError: class NotFoundError extends BaseError {
+        constructor(message) {
+            super(message, HTTP_STATUS_CODES.NotFoundError);
+        }
+    },
+    NotAuthenticatedError: class NotAuthenticatedError extends BaseError {
+        constructor(message) {
+            super(message, HTTP_STATUS_CODES.NotAuthenticated);
+        }
+    },
+    ForbiddenError: class ForbiddenError extends BaseError {
+        constructor(message) {
+            super(message, HTTP_STATUS_CODES.Forbidden);
+        }
+    },
+    InvalidDuplicateEntryError: class InvalidDuplicateEntryError extends BaseError {
+        constructor(message) {
+            super(message, HTTP_STATUS_CODES.InvalidDuplicateEntry);
+        }
+    },
     errorHandler: (err, req, res, next) => {
         if (!(err instanceof BaseError)) {
             next(err);

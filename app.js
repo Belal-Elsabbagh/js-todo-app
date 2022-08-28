@@ -23,6 +23,6 @@ try {
     console.log(`Server started on port ${API_PORT}`)
     module.exports = app
 } catch (err) {
-    console.log(err);
+    console.error(err);
     process.exit(1)
 }
